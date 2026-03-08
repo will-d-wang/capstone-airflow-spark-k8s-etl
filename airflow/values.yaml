@@ -2,6 +2,10 @@
 executor: "KubernetesExecutor"
 
 images:
+  airflow:
+    repository: local/airflow-custom
+    tag: dev
+    pullPolicy: IfNotPresent
   migrationsWaitTimeout: 300
 
 postgresql:
@@ -28,12 +32,6 @@ dags:
     subPath: "dags"
     wait: 30
     depth: 1
-
-extraPipPackages:
-  - "apache-airflow-providers-cncf-kubernetes"
-  - "apache-airflow-providers-amazon"
-  - "boto3"
-  - "psycopg2-binary"
 
 createUserJob:
   useHelmHooks: true

@@ -29,11 +29,15 @@ This project demonstrates a daily ETL + feature build pipeline using Airflow orc
 scripts/00_minikube_up.sh
 ```
 
-2. Build Spark image into Minikube Docker daemon:
+2. Build runtime images into Minikube Docker daemon:
 
 ```bash
 scripts/build_images.sh
 ```
+
+This builds:
+- `local/spark-job:dev`
+- `local/airflow-custom:dev` (installs `airflow/requirements.txt` and runs unit tests in a Docker build stage)
 
 3. Set credentials via environment variables (recommended).  
 For demo usage, defaults exist in scripts, but avoid committing real secrets.
@@ -72,6 +76,7 @@ scripts/02_install_airflow.sh
 ```
 
 `scripts/02_install_airflow.sh` reads Airflow admin user values from `AIRFLOW_ADMIN_*` env vars.
+Airflow uses the custom image configured in `airflow/values.yaml` (`local/airflow-custom:dev`).
 
 7. Seed sample raw data:
 

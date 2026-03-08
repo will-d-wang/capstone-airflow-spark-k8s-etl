@@ -16,3 +16,4 @@ if ! docker version >/tmp/docker-version.out 2>/tmp/docker-version.err; then
 fi
 
 docker build -t local/spark-job:dev -f docker/spark/Dockerfile .
+docker build -t local/airflow-custom:dev -f docker/airflow/Dockerfile .
