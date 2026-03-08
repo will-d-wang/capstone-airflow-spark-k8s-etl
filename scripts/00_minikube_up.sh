@@ -12,3 +12,10 @@ eval "$(minikube -p "$PROFILE" docker-env)"
 
 # Keep kubectl context aligned with this profile
 kubectl config use-context "$PROFILE" >/dev/null
+
+echo "Minikube status:"
+minikube status -p "$PROFILE"
+
+echo "Kubernetes nodes:"
+kubectl get nodes
+kubectl wait --for=condition=Ready node --all --timeout=180s

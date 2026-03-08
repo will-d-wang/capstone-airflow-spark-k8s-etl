@@ -35,36 +35,58 @@ scripts/00_minikube_up.sh
 scripts/build_images.sh
 ```
 
-3. Deploy infra (namespace, secrets/configmap, Postgres, MinIO):
+3. Set credentials via environment variables (recommended).  
+For demo usage, defaults exist in scripts, but avoid committing real secrets.
+
+```bash
+export POSTGRES_USER='airflow'
+export POSTGRES_PASSWORD='change-me-postgres'
+export POSTGRES_DB='airflow'
+export MINIO_ROOT_USER='minioadmin'
+export MINIO_ROOT_PASSWORD='change-me-minio'
+export AIRFLOW_ADMIN_USERNAME='admin'
+export AIRFLOW_ADMIN_PASSWORD='change-me-airflow-admin'
+export AIRFLOW_ADMIN_EMAIL='admin@example.com'
+export AIRFLOW_ADMIN_FIRST_NAME='Admin'
+export AIRFLOW_ADMIN_LAST_NAME='User'
+```
+
+4. Deploy infra (namespace, secrets/configmap, Postgres, MinIO):
 
 ```bash
 scripts/01_deploy_infra.sh
 ```
 
-4. Set your DAG git repo in `airflow/values.yaml`:
+`scripts/01_deploy_infra.sh` creates/updates:
+- `pipeline-secrets` from `POSTGRES_*` and `MINIO_*` env vars
+- `airflow-metadata-secret` from DB env vars (used by Airflow as metadata connection)
+
+5. Set your DAG git repo in `airflow/values.yaml`:
 
 - Replace `https://github.com/<YOUR_GITHUB>/<YOUR_REPO>.git`.
 
-5. Install Airflow chart:
+6. Install Airflow chart:
 
 ```bash
 scripts/02_install_airflow.sh
 ```
 
-6. Seed sample raw data:
+`scripts/02_install_airflow.sh` reads Airflow admin user values from `AIRFLOW_ADMIN_*` env vars.
+
+7. Seed sample raw data:
 
 ```bash
 scripts/03_seed_data.sh
 ```
 
-7. Port-forward UIs:
+8. Port-forward UIs:
 
 ```bash
 scripts/04_port_forward.sh
 ```
 
-- Airflow: `http://localhost:8080` (`admin/admin`)
-- MinIO console: `http://localhost:9001` (`minioadmin/minioadmin123`)
+- Airflow: `http://localhost:8080` (`$AIRFLOW_ADMIN_USERNAME` / `$AIRFLOW_ADMIN_PASSWORD`)
+- MinIO console: `http://localhost:9001` (`$MINIO_ROOT_USER` / `$MINIO_ROOT_PASSWORD`)
 
 ## Trigger DAGs
 

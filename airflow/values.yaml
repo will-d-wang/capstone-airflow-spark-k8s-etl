@@ -1,18 +1,14 @@
 # Apache Airflow official Helm chart values (minimal, K8sExecutor)
 executor: "KubernetesExecutor"
 
+images:
+  migrationsWaitTimeout: 300
+
 postgresql:
   enabled: false
 
 data:
-  metadataConnection:
-    protocol: postgresql
-    host: postgres.ai-core-pipeline.svc.cluster.local
-    port: 5432
-    db: airflow
-    user: airflow
-    pass: airflow
-    sslmode: disable
+  metadataSecretName: airflow-metadata-secret
 
 webserver:
   service:
@@ -21,16 +17,13 @@ webserver:
 scheduler:
   replicas: 1
 
-workers:
-  enabled: false
-
 triggerer:
   enabled: true
 
 dags:
   gitSync:
     enabled: true
-    repo: "https://github.com/<YOUR_GITHUB>/<YOUR_REPO>.git"
+    repo: "https://github.com/will-d-wang/ai-core-capstone.git"
     branch: "main"
     subPath: "dags"
     wait: 30
@@ -44,10 +37,7 @@ extraPipPackages:
 
 createUserJob:
   useHelmHooks: true
-users:
-  - username: admin
-    password: admin
-    role: Admin
-    email: admin@example.com
-    firstName: Admin
-    lastName: User
+
+migrateDatabaseJob:
+  enabled: true
+  useHelmHooks: false
