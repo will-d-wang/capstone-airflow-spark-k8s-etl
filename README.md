@@ -125,14 +125,16 @@ Airflow uses the custom image configured in `airflow/helm-values.yaml` (`local/a
 scripts/03_seed_data.sh
 ```
 
-8. Port-forward UIs:
+8. Configure ingress access (no port-forward):
 
 ```bash
-scripts/04_port_forward.sh
+scripts/04_setup_ingress.sh
 ```
 
-- Airflow: `http://localhost:8080` (`$AIRFLOW_ADMIN_USERNAME` / `$AIRFLOW_ADMIN_PASSWORD`)
-- MinIO console: `http://localhost:9001` (`$MINIO_ROOT_USER` / `$MINIO_ROOT_PASSWORD`)
+This script applies ingress and updates `/etc/hosts` automatically (may prompt for sudo). Then open:
+
+- Airflow: `http://airflow.local` (`$AIRFLOW_ADMIN_USERNAME` / `$AIRFLOW_ADMIN_PASSWORD`)
+- MinIO console: `http://minio-console.local` (`$MINIO_ROOT_USER` / `$MINIO_ROOT_PASSWORD`)
 
 ## Trigger DAGs
 

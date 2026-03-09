@@ -38,6 +38,7 @@ kubectl -n "$NAMESPACE" create secret generic airflow-metadata-secret \
 kubectl apply -n "$NAMESPACE" -f k8s/configmap.yaml
 kubectl apply -f k8s/postgres.yaml
 kubectl apply -f k8s/minio.yaml
+kubectl apply -f k8s/ingress-minio.yaml
 
 kubectl -n "$NAMESPACE" rollout status statefulset/postgres
 kubectl -n "$NAMESPACE" rollout status deploy/minio

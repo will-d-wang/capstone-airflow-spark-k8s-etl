@@ -49,15 +49,9 @@ until helm upgrade --install "$RELEASE_NAME" apache-airflow/airflow \
 done
 
 echo "Waiting for Airflow components..."
-if kubectl -n "$NAMESPACE" get deploy/airflow-api-server >/dev/null 2>&1; then
-  kubectl -n "$NAMESPACE" rollout status deploy/airflow-api-server --timeout=10m
-else
-  kubectl -n "$NAMESPACE" rollout status deploy/airflow-webserver --timeout=10m
-fi
-
+kubectl -n "$NAMESPACE" rollout status deploy/airflow-api-server --timeout=10m
 kubectl -n "$NAMESPACE" rollout status deploy/airflow-scheduler --timeout=10m
-if kubectl -n "$NAMESPACE" get statefulset/airflow-triggerer >/dev/null 2>&1; then
-  kubectl -n "$NAMESPACE" rollout status statefulset/airflow-triggerer --timeout=10m
-else
-  kubectl -n "$NAMESPACE" rollout status deploy/airflow-triggerer --timeout=10m
-fi
+kubectl -n "$NAMESPACE" rollout status statefulset/airflow-triggerer --timeout=10m
+
+echo "Configuring Airflow ingress..."
+kubectl apply -f k8s/ingress-airflow-api.yaml
