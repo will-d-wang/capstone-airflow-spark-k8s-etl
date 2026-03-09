@@ -6,9 +6,9 @@ RUN pip install --no-cache-dir -r /opt/airflow/requirements.txt
 
 FROM deps AS tests
 WORKDIR /opt/airflow
-COPY dags/ /opt/airflow/dags/
+COPY airflow/dags/ /opt/airflow/dags/
+COPY airflow/tests/ /opt/airflow/tests/
 COPY jobs/ /opt/airflow/jobs/
-COPY tests/ /opt/airflow/tests/
 RUN pip install --no-cache-dir pytest
 ENV PYTHONPATH=/opt/airflow
 

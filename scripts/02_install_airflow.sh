@@ -38,7 +38,7 @@ until helm upgrade --install "$RELEASE_NAME" apache-airflow/airflow \
   --set-string createUserJob.defaultUser.email="$AIRFLOW_ADMIN_EMAIL" \
   --set-string createUserJob.defaultUser.firstName="$AIRFLOW_ADMIN_FIRST_NAME" \
   --set-string createUserJob.defaultUser.lastName="$AIRFLOW_ADMIN_LAST_NAME" \
-  -f airflow/values.yaml; do
+  -f airflow/helm-values.yaml; do
   if [[ "$attempt" -ge "$HELM_RETRIES" ]]; then
     echo "Helm install failed after ${HELM_RETRIES} attempts"
     exit 1

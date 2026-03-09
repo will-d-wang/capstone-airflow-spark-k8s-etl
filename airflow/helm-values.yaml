@@ -29,7 +29,7 @@ dags:
     enabled: true
     repo: "https://github.com/will-d-wang/ai-core-capstone.git"
     branch: "main"
-    subPath: "dags"
+    subPath: "airflow/dags"
     wait: 30
     depth: 1
 
