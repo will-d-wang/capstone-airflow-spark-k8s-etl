@@ -5,16 +5,21 @@ MODE="${1:-local}"
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 AIRFLOW_DOCKERFILE="${AIRFLOW_DOCKERFILE:-docker/airflow/Dockerfile}"
 AIRFLOW_TEST_IMAGE="${AIRFLOW_TEST_IMAGE:-local/airflow-custom-tests:dev}"
+JOBS_DOCKERFILE="${JOBS_DOCKERFILE:-docker/jobs-pyspark/Dockerfile}"
+JOBS_TEST_IMAGE="${JOBS_TEST_IMAGE:-local/spark-job-tests:dev}"
 
 run_local() {
   cd "$ROOT_DIR"
-  python -m pytest -q tests
+  python -m pytest -q airflow/tests
+  python -m pytest -q jobs/tests
 }
 
 run_docker() {
   cd "$ROOT_DIR"
   docker build --target tests -t "$AIRFLOW_TEST_IMAGE" -f "$AIRFLOW_DOCKERFILE" .
   docker run --rm --entrypoint python "$AIRFLOW_TEST_IMAGE" -m pytest -q tests
+  docker build --target tests -t "$JOBS_TEST_IMAGE" -f "$JOBS_DOCKERFILE" .
+  docker run --rm --entrypoint python "$JOBS_TEST_IMAGE" -m pytest -q jobs/tests
 }
 
 case "$MODE" in

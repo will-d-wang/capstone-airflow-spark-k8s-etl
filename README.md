@@ -4,14 +4,14 @@ This project demonstrates a daily ETL + feature build pipeline using Airflow orc
 
 ## Layout
 
-- `dags/daily_ingest.py`
-- `dags/daily_feature_build.py`
+- `airflow/dags/daily_ingest.py`
+- `airflow/dags/daily_feature_build.py`
 - `jobs/pyspark/ingest_job.py`
 - `jobs/pyspark/feature_job.py`
-- `airflow/values.yaml`
+- `airflow/helm-values.yaml`
 - `airflow/requirements.txt`
-- `tests/test_dag_imports.py`
-- `tests/test_feature_job.py`
+- `airflow/tests/test_dag_imports.py`
+- `jobs/tests/test_feature_job.py`
 
 ## Prerequisites
 
@@ -67,7 +67,7 @@ scripts/01_deploy_infra.sh
 - `pipeline-secrets` from `POSTGRES_*` and `MINIO_*` env vars
 - `airflow-metadata-secret` from DB env vars (used by Airflow as metadata connection)
 
-5. Set your DAG git repo in `airflow/values.yaml`:
+5. Set your DAG git repo in `airflow/helm-values.yaml`:
 
 - Replace `https://github.com/<YOUR_GITHUB>/<YOUR_REPO>.git`.
 
@@ -78,7 +78,7 @@ scripts/02_install_airflow.sh
 ```
 
 `scripts/02_install_airflow.sh` reads Airflow admin user values from `AIRFLOW_ADMIN_*` env vars.
-Airflow uses the custom image configured in `airflow/values.yaml` (`local/airflow-custom:dev`).
+Airflow uses the custom image configured in `airflow/helm-values.yaml` (`local/airflow-custom:dev`).
 
 7. Seed sample raw data:
 
@@ -106,7 +106,7 @@ scripts/05_trigger_run.sh backfill 2026-03-06 2026-03-07 daily_ingest
 ## Tests
 
 ```bash
-pytest -q tests
+pytest -q airflow/tests jobs/tests
 ```
 
 ## Debugging
