@@ -1,4 +1,4 @@
-# AI Core ETL Demo (Airflow + Spark + Kubernetes)
+# Capstone Airflow Spark K8s ETL
 
 This project demonstrates a daily ETL + feature build pipeline using Airflow orchestration, PySpark transforms, and Kubernetes task isolation.
 

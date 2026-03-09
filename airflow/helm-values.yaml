@@ -27,7 +27,7 @@ triggerer:
 dags:
   gitSync:
     enabled: true
-    repo: "https://github.com/will-d-wang/ai-core-capstone.git"
+    repo: "https://github.com/will-d-wang/capstone-airflow-spark-k8s-etl.git"
     branch: "main"
     subPath: "airflow/dags"
     wait: 30
