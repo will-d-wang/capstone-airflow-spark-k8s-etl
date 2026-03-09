@@ -40,3 +40,8 @@ kubectl get nodes
 
 echo "Metrics API resources:"
 kubectl api-resources --api-group=metrics.k8s.io
+
+echo "Ingress controller image:"
+kubectl -n ingress-nginx get deploy ingress-nginx-controller \
+  -o jsonpath='{.spec.template.spec.containers[0].image}'
+echo
