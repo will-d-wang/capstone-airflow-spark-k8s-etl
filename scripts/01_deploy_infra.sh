@@ -21,7 +21,7 @@ AIRFLOW_DB_SSLMODE="${AIRFLOW_DB_SSLMODE:-disable}"
 
 AIRFLOW_METADATA_CONNECTION="${AIRFLOW_DB_PROTOCOL}://${AIRFLOW_DB_USER}:${AIRFLOW_DB_PASSWORD}@${AIRFLOW_DB_HOST}:${AIRFLOW_DB_PORT}/${AIRFLOW_DB_NAME}?sslmode=${AIRFLOW_DB_SSLMODE}"
 
-kubectl apply -f infra/k8s/namespace.yaml
+kubectl apply -f k8s/namespace.yaml
 
 kubectl -n "$NAMESPACE" create secret generic pipeline-secrets \
   --from-literal=POSTGRES_USER="$POSTGRES_USER" \
@@ -35,9 +35,9 @@ kubectl -n "$NAMESPACE" create secret generic airflow-metadata-secret \
   --from-literal=connection="$AIRFLOW_METADATA_CONNECTION" \
   --dry-run=client -o yaml | kubectl apply -f -
 
-kubectl apply -n "$NAMESPACE" -f infra/k8s/configmap.yaml
-kubectl apply -f infra/k8s/postgres.yaml
-kubectl apply -f infra/k8s/minio.yaml
+kubectl apply -n "$NAMESPACE" -f k8s/configmap.yaml
+kubectl apply -f k8s/postgres.yaml
+kubectl apply -f k8s/minio.yaml
 
 kubectl -n "$NAMESPACE" rollout status statefulset/postgres
 kubectl -n "$NAMESPACE" rollout status deploy/minio

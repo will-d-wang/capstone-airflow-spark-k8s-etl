@@ -15,8 +15,8 @@
 ## Kubernetes operations
 - Airflow installed with Helm from `airflow/values.yaml`
 - Separation of concerns:
-  - config in `infra/k8s/configmap.yaml`
-  - secrets in `infra/k8s/secrets.yaml`
+  - config in `k8s/configmap.yaml`
+  - secrets in `k8s/secrets.yaml`
 - Ops helpers:
   - `scripts/05_trigger_run.sh pods`
   - `scripts/05_trigger_run.sh logs`
