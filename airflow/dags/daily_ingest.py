@@ -21,6 +21,7 @@ with DAG(
     start_date=datetime(2026, 3, 1),
     schedule="@daily",
     catchup=True,
+    is_paused_upon_creation=False,
     default_args=DEFAULT_ARGS,
     max_active_runs=1,
     tags=["ai-core", "ingest"],
