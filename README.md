@@ -19,6 +19,7 @@ This project demonstrates a daily ETL + feature build pipeline using Airflow orc
 - Minikube
 - kubectl
 - Helm 3
+- Terraform
 - uv
 - Python 3.11+
 
@@ -96,42 +97,30 @@ export AIRFLOW_ADMIN_FIRST_NAME='Admin'
 export AIRFLOW_ADMIN_LAST_NAME='User'
 ```
 
-4. Deploy infra (namespace, secrets/configmap, Postgres, MinIO):
+4. Deploy the full platform with Terraform (consolidated steps 01-04):
 
 ```bash
 scripts/01_deploy_infra.sh
 ```
 
-`scripts/01_deploy_infra.sh` creates/updates:
+`scripts/01_deploy_infra.sh` runs a single Terraform apply from `infra/terraform` and:
 - `pipeline-secrets` from `POSTGRES_*` and `MINIO_*` env vars
 - `airflow-metadata-secret` from DB env vars (used by Airflow as metadata connection)
+- Deploys Postgres + MinIO
+- Installs Airflow via Helm
+- Optionally runs `scripts/bootstrap_env.sh` after apply
 
-5. Set your DAG git repo in `airflow/helm-values.yaml`:
+`scripts/bootstrap_env.sh`:
+- Waits for Postgres, MinIO, and Airflow scheduler rollout
+- Runs the seed-data job
+- Configures local access (updates `/etc/hosts` and verifies MinIO API health)
 
+Set `SKIP_BOOTSTRAP=true` to run Terraform apply without bootstrap steps.
+
+Before running, set your DAG git repo in `airflow/helm-values.yaml`:
 - Replace `https://github.com/<YOUR_GITHUB>/<YOUR_REPO>.git`.
 
-6. Install Airflow chart:
-
-```bash
-scripts/02_install_airflow.sh
-```
-
-`scripts/02_install_airflow.sh` reads Airflow admin user values from `AIRFLOW_ADMIN_*` env vars.
-Airflow uses the custom image configured in `airflow/helm-values.yaml` (`local/airflow-custom:dev`).
-
-7. Seed sample raw data:
-
-```bash
-scripts/03_seed_data.sh
-```
-
-8. Configure ingress access (no port-forward):
-
-```bash
-scripts/04_setup_ingress.sh
-```
-
-This script applies ingress and updates `/etc/hosts` automatically (may prompt for sudo). Then open:
+Then open:
 
 - Airflow: `http://airflow.local` (`$AIRFLOW_ADMIN_USERNAME` / `$AIRFLOW_ADMIN_PASSWORD`)
 - MinIO console: `http://minio-console.local` (`$MINIO_ROOT_USER` / `$MINIO_ROOT_PASSWORD`)
@@ -139,9 +128,9 @@ This script applies ingress and updates `/etc/hosts` automatically (may prompt f
 ## Trigger DAGs
 
 ```bash
-scripts/05_trigger_run.sh trigger 2026-03-06 daily_ingest
-scripts/05_trigger_run.sh trigger 2026-03-06 daily_feature_build
-scripts/05_trigger_run.sh backfill 2026-03-06 2026-03-07 daily_ingest
+scripts/02_trigger_run.sh trigger 2026-03-06 daily_ingest
+scripts/02_trigger_run.sh trigger 2026-03-06 daily_feature_build
+scripts/02_trigger_run.sh backfill 2026-03-06 2026-03-07 daily_ingest
 ```
 
 ## Tests
@@ -155,8 +144,8 @@ scripts/run_unit_tests.sh docker
 ## Debugging
 
 ```bash
-scripts/05_trigger_run.sh pods
-scripts/05_trigger_run.sh logs
+scripts/02_trigger_run.sh pods
+scripts/02_trigger_run.sh logs
 kubectl -n ai-core-pipeline logs <spark-pod-name>
 kubectl -n ai-core-pipeline describe pod <spark-pod-name>
 ```

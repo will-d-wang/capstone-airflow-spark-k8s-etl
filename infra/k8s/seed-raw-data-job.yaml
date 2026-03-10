@@ -1,8 +1,8 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: seed-raw-data
-  namespace: ai-core-pipeline
+  name: ${JOB_NAME}
+  namespace: ${NAMESPACE}
 spec:
   template:
     spec:
@@ -12,17 +12,22 @@ spec:
           image: quay.io/minio/mc:RELEASE.2024-01-16T16-06-34Z
           env:
             - name: MINIO_ROOT_USER
-              valueFrom: { secretKeyRef: { name: pipeline-secrets, key: MINIO_ROOT_USER } }
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: MINIO_ROOT_USER
             - name: MINIO_ROOT_PASSWORD
-              valueFrom: { secretKeyRef: { name: pipeline-secrets, key: MINIO_ROOT_PASSWORD } }
+              valueFrom:
+                secretKeyRef:
+                  name: pipeline-secrets
+                  key: MINIO_ROOT_PASSWORD
           command: ["/bin/sh", "-c"]
           args:
             - |
               set -e
-              mc alias set local http://minio.ai-core-pipeline.svc.cluster.local:9000 "$MINIO_ROOT_USER" "$MINIO_ROOT_PASSWORD"
-              mc mb -p local/lake || true
+              mc alias set local ${S3_ENDPOINT} "${DOLLAR}MINIO_ROOT_USER" "${DOLLAR}MINIO_ROOT_PASSWORD"
+              mc mb -p local/${S3_BUCKET} || true
 
-              # Create two tenants for one date
               DATE="2026-03-06"
               cat > /tmp/events1.json <<'JSON1'
               {"tenant_id":"T1","event_id":"e1","event_ts":"2026-03-06T10:00:00Z","event_type":"click","payload":{"page":"home"}}
@@ -35,5 +40,5 @@ spec:
               {"tenant_id":"T2","event_id":"a2","event_ts":"2026-03-06T09:10:00Z","event_type":"purchase","payload":{"sku":"s1"}}
               JSON2
 
-              mc cp /tmp/events1.json local/lake/raw/dt=$DATE/tenant_id=T1/events-001.json
-              mc cp /tmp/events2.json local/lake/raw/dt=$DATE/tenant_id=T2/events-001.json
+              mc cp /tmp/events1.json local/${S3_BUCKET}/raw/dt=${DOLLAR}DATE/tenant_id=T1/events-001.json
+              mc cp /tmp/events2.json local/${S3_BUCKET}/raw/dt=${DOLLAR}DATE/tenant_id=T2/events-001.json

@@ -8,10 +8,10 @@ SCHEDULER="deploy/airflow-scheduler"
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/05_trigger_run.sh trigger <YYYY-MM-DD> [dag_id]
-  scripts/05_trigger_run.sh backfill <YYYY-MM-DD> <YYYY-MM-DD> [dag_id]
-  scripts/05_trigger_run.sh logs
-  scripts/05_trigger_run.sh pods
+  scripts/02_trigger_run.sh trigger <YYYY-MM-DD> [dag_id]
+  scripts/02_trigger_run.sh backfill <YYYY-MM-DD> <YYYY-MM-DD> [dag_id]
+  scripts/02_trigger_run.sh logs
+  scripts/02_trigger_run.sh pods
 EOF
 }
 

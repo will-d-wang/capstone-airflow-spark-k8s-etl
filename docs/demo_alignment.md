@@ -15,11 +15,11 @@
 ## Kubernetes operations
 - Airflow installed with Helm from `airflow/values.yaml`
 - Separation of concerns:
-  - config in `k8s/configmap.yaml`
-  - secrets in `k8s/secrets.yaml`
+  - platform resources in `infra/terraform/modules/platform`
+  - bootstrap helpers in `scripts/libs/deploy_infra`
 - Ops helpers:
-  - `scripts/05_trigger_run.sh pods`
-  - `scripts/05_trigger_run.sh logs`
+  - `scripts/02_trigger_run.sh pods`
+  - `scripts/02_trigger_run.sh logs`
 
 ## AWS mapping
 - MinIO -> S3

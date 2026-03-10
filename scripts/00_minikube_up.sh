@@ -5,10 +5,27 @@ PROFILE="${MINIKUBE_PROFILE:-ai-core-etl}"
 NODE_TIMEOUT="${NODE_TIMEOUT:-180s}"
 METRICS_TIMEOUT_SECONDS="${METRICS_TIMEOUT_SECONDS:-180}"
 METRICS_POLL_INTERVAL_SECONDS="${METRICS_POLL_INTERVAL_SECONDS:-5}"
+MINIKUBE_CPUS="${MINIKUBE_CPUS:-6}"
+MINIKUBE_MEMORY_MB="${MINIKUBE_MEMORY_MB:-12288}"
+MINIKUBE_DISK_SIZE="${MINIKUBE_DISK_SIZE:-40g}"
 
-minikube start -p "$PROFILE" --cpus=6 --memory=12288 --disk-size=40g
-minikube addons enable ingress -p "$PROFILE"
-minikube addons enable metrics-server -p "$PROFILE"
+if minikube status -p "$PROFILE" --format='{{.Host}} {{.Kubelet}} {{.APIServer}}' >/dev/null 2>&1; then
+  status="$(minikube status -p "$PROFILE" --format='{{.Host}} {{.Kubelet}} {{.APIServer}}')"
+else
+  status=""
+fi
+
+if [[ "$status" == "Running Running Running" ]]; then
+  echo "Minikube profile '$PROFILE' is already running; skipping start."
+else
+  echo "Starting minikube profile '$PROFILE'..."
+  minikube start -p "$PROFILE" \
+    --cpus="$MINIKUBE_CPUS" \
+    --memory="$MINIKUBE_MEMORY_MB" \
+    --disk-size="$MINIKUBE_DISK_SIZE"
+  minikube addons enable ingress -p "$PROFILE"
+  minikube addons enable metrics-server -p "$PROFILE"
+fi
 
 # Keep minikube CLI and kubectl aligned with this profile/context.
 minikube profile "$PROFILE" >/dev/null
