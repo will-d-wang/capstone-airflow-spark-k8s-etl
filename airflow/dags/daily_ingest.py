@@ -47,8 +47,12 @@ with DAG(
         name="daily-ingest",
         cmds=["python", "-m", "jobs.pyspark.ingest_job"],
         env_from=[
-            k8s.V1EnvFromSource(config_map_ref=k8s.V1ConfigMapEnvSource(name="pipeline-config")),
-            k8s.V1EnvFromSource(secret_ref=k8s.V1SecretEnvSource(name="pipeline-secrets")),
+            k8s.V1EnvFromSource(
+                config_map_ref=k8s.V1ConfigMapEnvSource(name="pipeline-config")
+            ),
+            k8s.V1EnvFromSource(
+                secret_ref=k8s.V1SecretEnvSource(name="pipeline-secrets")
+            ),
         ],
         container_resources=k8s.V1ResourceRequirements(
             requests={"cpu": "500m", "memory": "1Gi"},
