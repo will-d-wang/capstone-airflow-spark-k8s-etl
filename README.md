@@ -14,8 +14,8 @@ This project demonstrates a daily ETL + feature build pipeline using Airflow orc
 
 Refer to the docs for setup and operations:
 
-- Architecture diagrams: [docs/architecture.md](/home/will/code/microservice-arch/capstone-airflow-spark-k8s-etl/docs/architecture.md)
-- Local development: [docs/setup.md](/home/will/code/microservice-arch/capstone-airflow-spark-k8s-etl/docs/setup.md)
-- Run and deploy: [docs/run.md](/home/will/code/microservice-arch/capstone-airflow-spark-k8s-etl/docs/run.md)
-- Tests: [docs/tests.md](/home/will/code/microservice-arch/capstone-airflow-spark-k8s-etl/docs/tests.md)
-- Debugging and operations: [docs/debugging.md](/home/will/code/microservice-arch/capstone-airflow-spark-k8s-etl/docs/debugging.md)
+- Architecture diagrams: [docs/architecture.md](docs/architecture.md)
+- Local development: [docs/setup.md](docs/setup.md)
+- Run and deploy: [docs/run.md](docs/run.md)
+- Tests: [docs/tests.md](docs/tests.md)
+- Debugging and operations: [docs/debugging.md](docs/debugging.md)
